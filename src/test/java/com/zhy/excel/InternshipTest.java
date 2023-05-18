@@ -3,6 +3,8 @@ package com.zhy.excel;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -11,6 +13,7 @@ import com.zhy.utils.SchoolExcel;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StringUtils;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,19 +28,18 @@ import java.util.stream.Collectors;
 class InternshipTest {
 
 
-    @Test
-    void excel() {
-        ExcelReader libReader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\intern_program.xlsx", 0);
 
+    @Test
+    void excel() throws SQLException {
+
+        List<InternshipExcel> internshipExcels = db();
 
         Map<String, InternshipExcel> libIntern = new HashMap<>();
 
-        List<InternshipExcel> libList = new ArrayList<>();
+        internshipExcels.forEach(intern -> {
 
-        libReader.read().forEach(intern -> {
-
-            String id = String.valueOf(intern.get(0)).trim();
-            String name = String.valueOf(intern.get(1)).trim();
+            String id = String.valueOf(intern.getId()).trim();
+            String name = String.valueOf(intern.getName()).trim();
             InternshipExcel exist = libIntern.get(name);
             if (exist != null) {
                 exist.incrDuplicates();
@@ -50,13 +52,8 @@ class InternshipTest {
             internshipExcel.incrDuplicates();
 
             libIntern.put(name, internshipExcel);
-            libList.add(internshipExcel);
 
         });
-
-        //InternshipExcel jingzao = libIntern.get("京汽造青工职院订单班");
-        //System.out.println(jingzao);
-
 
         ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\企业排序(1).xlsx", 0);
         List<InternshipExcel> readAll = reader.read().stream().map(s -> {
@@ -115,5 +112,19 @@ class InternshipTest {
             writer.append("'" + id + "',");
 
         }
+    }
+
+    @Test
+    List<InternshipExcel> db() throws SQLException {
+        List<InternshipExcel> internshipExcels = Db.use().findAll("intern_program").stream().map(entity -> {
+            InternshipExcel internshipExcel = new InternshipExcel();
+            internshipExcel.setId(String.valueOf(entity.get("id")));
+            internshipExcel.setName(String.valueOf(entity.get("name")));
+
+            return internshipExcel;
+        }).collect(Collectors.toList());
+
+
+        return internshipExcels;
     }
 }
