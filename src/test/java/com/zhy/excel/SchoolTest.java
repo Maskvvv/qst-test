@@ -73,10 +73,5 @@ class SchoolTest {
             writer.append("'" + schoolExcel.getCode() + "',");
 
         }
-
-
-
-
-
     }
 }

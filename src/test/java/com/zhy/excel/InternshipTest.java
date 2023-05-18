@@ -1,12 +1,15 @@
 package com.zhy.excel;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.zhy.utils.InternshipExcel;
 import com.zhy.utils.SchoolExcel;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,13 +58,12 @@ class InternshipTest {
         //System.out.println(jingzao);
 
 
-        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\已注册企业-青工职(2).xlsx", 0);
+        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\企业排序(1).xlsx", 0);
         List<InternshipExcel> readAll = reader.read().stream().map(s -> {
             InternshipExcel internshipExcel = new InternshipExcel();
             internshipExcel.setSort(String.valueOf(s.get(0)));
             internshipExcel.setCompanyName(String.valueOf(s.get(1)));
             internshipExcel.setName(String.valueOf(s.get(2)));
-            internshipExcel.setContact(String.valueOf(s.get(3)));
             internshipExcel.setId(libIntern.getOrDefault(internshipExcel.getName().trim(), new InternshipExcel()).getId());
             internshipExcel.setDuplicates(libIntern.getOrDefault(internshipExcel.getName().trim(), new InternshipExcel()).getDuplicates());
             return internshipExcel;
@@ -82,10 +84,36 @@ class InternshipTest {
 
     @Test
     void txt(List<InternshipExcel> readAll) {
+        String filePath = "D:\\UserFiles\\桌面\\青工职id.txt";
+        FileUtil.del(filePath);
 
-        FileWriter writer = new FileWriter("D:\\UserFiles\\桌面\\青工职id.txt");
+
+        FileWriter writer = new FileWriter(filePath);
         for (InternshipExcel internshipExcel : readAll) {
             writer.append("'" + internshipExcel.getId() + "',");
+        }
+    }
+
+
+    @Test
+    void excelText() {
+
+        ExcelReader libReader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\青工职id.xlsx", 0);
+        List<InternshipExcel> libSchool = libReader.read().stream().map(s -> {
+            InternshipExcel schoolExcel = new InternshipExcel();
+            schoolExcel.setId(String.valueOf(s.get(4)).trim());
+            return schoolExcel;
+        }).collect(Collectors.toList());
+
+        String filePath = "D:\\UserFiles\\桌面\\青工职id.txt";
+        FileUtil.del(filePath);
+
+        FileWriter writer = new FileWriter(filePath);
+        for (InternshipExcel schoolExcel : libSchool) {
+
+            String id = StrUtil.blankToDefault(schoolExcel.getId(), "NULL");
+            writer.append("'" + id + "',");
+
         }
     }
 }
