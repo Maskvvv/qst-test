@@ -108,7 +108,7 @@ class InternshipTest {
         for (InternshipExcel schoolExcel : libSchool) {
 
             String id = StrUtil.blankToDefault(schoolExcel.getId(), "NULL");
-            writer.append("'" + id + "',");
+            writer.append("\"" + id + "\",");
 
         }
     }
