@@ -88,7 +88,7 @@ class InternshipTest {
         FileWriter writer = new FileWriter(filePath);
         for (InternshipExcel internshipExcel : readAll) {
             String id = StrUtil.blankToDefault(internshipExcel.getId(), "NULL");
-            writer.append("'" + id + "',");
+            writer.append("\"" + id + "\",");
         }
     }
 
