@@ -53,7 +53,7 @@ class InternshipTest {
 
         });
 
-        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\企业排序(1).xlsx", 0);
+        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\5.19海大专属页面企业+限制+名称.xlsx", 0);
         List<InternshipExcel> readAll = reader.read().stream().map(s -> {
             InternshipExcel internshipExcel = new InternshipExcel();
             internshipExcel.setSort(String.valueOf(s.get(0)));
@@ -66,7 +66,7 @@ class InternshipTest {
 
 
         // 通过工具类创建writer
-        ExcelWriter writer = ExcelUtil.getWriter("D:\\UserFiles\\桌面\\青工职id.xlsx");
+        ExcelWriter writer = ExcelUtil.getWriter("D:\\UserFiles\\桌面\\海大id.xlsx");
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(readAll);
         // 关闭writer，释放内存
@@ -79,7 +79,7 @@ class InternshipTest {
 
     @Test
     void txt(List<InternshipExcel> readAll) {
-        String filePath = "D:\\UserFiles\\桌面\\青工职id.txt";
+        String filePath = "D:\\UserFiles\\桌面\\海大id.txt";
         FileUtil.del(filePath);
 
 
@@ -94,14 +94,14 @@ class InternshipTest {
     @Test
     void excelText() {
 
-        ExcelReader libReader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\青工职id.xlsx", 0);
+        ExcelReader libReader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\海大id.xlsx", 0);
         List<InternshipExcel> libSchool = libReader.read().stream().map(s -> {
             InternshipExcel schoolExcel = new InternshipExcel();
             schoolExcel.setId(String.valueOf(s.get(4)).trim());
             return schoolExcel;
         }).collect(Collectors.toList());
 
-        String filePath = "D:\\UserFiles\\桌面\\青工职id.txt";
+        String filePath = "D:\\UserFiles\\桌面\\海大id.txt";
         FileUtil.del(filePath);
 
         FileWriter writer = new FileWriter(filePath);
