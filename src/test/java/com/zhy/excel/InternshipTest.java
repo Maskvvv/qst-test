@@ -26,7 +26,9 @@ import java.util.stream.Collectors;
 class InternshipTest {
 
 
-
+    /**
+     * 生成事先设计好id
+     */
     @Test
     void excel() throws SQLException {
 

@@ -18,6 +18,9 @@ import org.junit.jupiter.api.Test;
  */
 public class VideoDownloadTest {
 
+    private String filePathPrefix = "E:\\需求文档\\file\\胜软科技\\与胜软的邂逅\\带你看胜软！！\\";
+    private String missionGroupId = "cf6eba47f4f4423288f1ddec61a698b6";
+
     @Test
     public String getHost() {
         Config load = ConfigFactory.parseResources("qst.conf");
@@ -30,7 +33,7 @@ public class VideoDownloadTest {
     public void test() {
         String qstHost = getHost();
 
-        String url = qstHost + "ourea/internship_missions?missionGroupId=f34a2f1f103a4d2e96b0051d32e9de2d";
+        String url = qstHost + "ourea/internship_missions?missionGroupId=" + missionGroupId;
         String result = get(url);
         JSONObject jsonObject = JSON.parseObject(result);
         JSONObject data = jsonObject.getJSONObject("data");
@@ -42,6 +45,9 @@ public class VideoDownloadTest {
             JSONObject row = rows.getJSONObject(i);
             String materialId = (String) row.get("materialId");
             String fileName = (String) row.get("name");
+            String type = (String) row.get("type");
+
+            if (!type.equals("Document") && !type.equals("Video")) continue;
             System.out.println(fileName);
 
             String fileUrl = qstHost + "ourea/internship_materials/" + materialId + "/view";
@@ -63,7 +69,7 @@ public class VideoDownloadTest {
     @Test
     public void file(String fileUrl, String fileName, int index, int totalCount) {
         //将文件下载后保存在E盘，返回结果为下载文件大小
-        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file("E:\\需求文档\\file\\" + fileName), new StreamProgress() {
+        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(filePathPrefix + fileName), new StreamProgress() {
 
             @Override
             public void start() {
@@ -84,7 +90,7 @@ public class VideoDownloadTest {
 
     private String get(String url) {
         String result = HttpRequest.get(url)
-                .header("X-Access-Token", "NDk1Mjk0MGEtMTRhZS00OGI3LWFhZmYtN2Y2Nzk4OWE5YTdk")
+                .header("X-Access-Token", "NzZjMjU3NzMtZDA3Ny00MjdmLWIyMDEtOTEyMWY5YzEwZTMz")
                 .timeout(20000)//超时，毫秒
                 .execute().body();
         return result;
