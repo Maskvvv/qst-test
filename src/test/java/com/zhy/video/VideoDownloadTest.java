@@ -18,19 +18,94 @@ import org.junit.jupiter.api.Test;
  */
 public class VideoDownloadTest {
 
-    private String filePathPrefix = "E:\\需求文档\\file\\胜软科技\\与胜软的邂逅\\带你看胜软！！\\";
-    private String missionGroupId = "cf6eba47f4f4423288f1ddec61a698b6";
+    private String filePathPrefix = "E:/需求文档/file/奥利普奇智";
+    private String internshipGroupId = "3f2ca7d4c74f4e88beeb4ae1e57ae0fe";
+    private String internshipId = "";
+    private String phaseId = "";
+    private String missionGroupId = "";
 
     @Test
     public String getHost() {
         Config load = ConfigFactory.parseResources("qst.conf");
         String qstHost = load.getString("qstHost");
-        System.out.println(qstHost);
+        //System.out.println(qstHost);
         return qstHost;
     }
 
     @Test
-    public void test() {
+    public void internship() {
+        String qstHost = getHost();
+        String url = qstHost + "ourea/internships/" + internshipGroupId + "/company";
+        String result = get(url);
+        JSONObject jsonObject = JSON.parseObject(result);
+        JSONObject data = jsonObject.getJSONObject("data");
+        JSONArray rows = data.getJSONArray("rows");
+
+        String filePathPrefix = this.filePathPrefix;
+        for (int i = 0; i < rows.size(); i++) {
+            JSONObject internship = rows.getJSONObject(i);
+
+            String internshipId = internship.getString("id");
+            String internshipName = internship.getString("name");
+            System.out.println("internship : " + internshipName);
+
+            this.internshipId = internshipId;
+            this.filePathPrefix = filePathPrefix + "/" + internshipName;
+            internshipPhase();
+            //System.out.println(this.filePathPrefix);
+        }
+    }
+
+    @Test
+    public void internshipPhase() {
+        String qstHost = getHost();
+        String url = qstHost + "ourea/internship_phases/" + internshipId + "/company";
+        String result = get(url);
+        JSONObject jsonObject = JSON.parseObject(result);
+        JSONObject data = jsonObject.getJSONObject("data");
+        JSONArray rows = data.getJSONArray("rows");
+
+        String filePathPrefix = this.filePathPrefix;
+        for (int i = 0; i < rows.size(); i++) {
+            JSONObject internshipPhase = rows.getJSONObject(i);
+
+            String internshipPhaseId = internshipPhase.getString("id");
+            String internshipPhaseName = internshipPhase.getString("name");
+            System.out.println("internshipPhase : " + internshipPhaseName);
+
+            this.phaseId = internshipPhaseId;
+            this.filePathPrefix = filePathPrefix + "/" + internshipPhaseName;
+            missionGroup();
+        }
+    }
+
+    @Test
+    public void missionGroup() {
+        String qstHost = getHost();
+        String url = qstHost + "ourea/internship_mission_groups?internshipId=" + internshipId + "&phaseId=" + phaseId;
+        String result = get(url);
+        JSONObject jsonObject = JSON.parseObject(result);
+        JSONObject data = jsonObject.getJSONObject("data");
+        JSONArray rows = data.getJSONArray("rows");
+        String filePathPrefix = this.filePathPrefix;
+        for (int i = 0; i < rows.size(); i++) {
+            JSONObject missionGroup = rows.getJSONObject(i);
+
+            String missionGroupId = missionGroup.getString("id");
+            String missionGroupName = missionGroup.getString("name");
+            System.out.println("missionGroup : " + missionGroupName);
+
+            this.missionGroupId = missionGroupId;
+            this.filePathPrefix = filePathPrefix + "/" + missionGroupName;
+            System.out.println(this.filePathPrefix);
+            mission();
+        }
+
+
+    }
+
+    @Test
+    public void mission() {
         String qstHost = getHost();
 
         String url = qstHost + "ourea/internship_missions?missionGroupId=" + missionGroupId;
@@ -69,7 +144,7 @@ public class VideoDownloadTest {
     @Test
     public void file(String fileUrl, String fileName, int index, int totalCount) {
         //将文件下载后保存在E盘，返回结果为下载文件大小
-        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(filePathPrefix + fileName), new StreamProgress() {
+        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(filePathPrefix + "/" + fileName), new StreamProgress() {
 
             @Override
             public void start() {
@@ -78,7 +153,7 @@ public class VideoDownloadTest {
 
             @Override
             public void progress(long total, long progressSize) {
-                Console.log(fileName + " 已下载: {}, {}, {}/{}", FileUtil.readableFileSize(progressSize), ((progressSize * 100) / total) + "%", index, totalCount);
+                Console.log("[ " + filePathPrefix + " ] [ " + fileName + " ]" + " 已下载: {}, {}, {}/{}", FileUtil.readableFileSize(progressSize), ((progressSize * 100) / total) + "%", index, totalCount);
             }
 
             @Override
@@ -90,7 +165,7 @@ public class VideoDownloadTest {
 
     private String get(String url) {
         String result = HttpRequest.get(url)
-                .header("X-Access-Token", "NzZjMjU3NzMtZDA3Ny00MjdmLWIyMDEtOTEyMWY5YzEwZTMz")
+                .header("X-Access-Token", "MGJjMGFhZGMtNzNjMy00MTRhLWE0NzEtZmY2OWMwNDc0ZmUx")
                 .timeout(20000)//超时，毫秒
                 .execute().body();
         return result;
