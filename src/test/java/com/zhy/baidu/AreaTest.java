@@ -76,7 +76,7 @@ public class AreaTest {
                         "&t=1686187720036" +
                         "&pc_ver=2" +
                         "&qt=sug" +
-                        "&auth=R0aDU2J5wYaI7SQef0wLP5AUZ2Z7bW8NuxLRLxRNNxNtHK%40ZKXTXRKCEBwyS8v7uvkGcuVtvvhguVtvyheuVtvCMGuVtvCQMuVtvIPcuVtvYvjuVtvZgMuVtcvY1SGpuxxtFiFmEb1vc3CuVtvcPPuVtveGvuVtveh3uxtwiKDv7uvhgMuxVVtvrMhuVtGccZcuxtf0wd0vyMSMySOOyO&seckey=ESmxq2EbEXwArGejZFp9pPZA9e3kOf7ZO94NyzVFET0%3D%2CA3ToHVLZUBBmLO1ceqFMZ2Lqqf8UU1DboSGnujAGnh_bgEvsIvA4ZTMNXlInikGdYK4UTSt8UBxx4qBRC8RnQhOM8g_PVNBL2jN-szJQ7U3AHwl9L7DgK0DNexQBIN6K1_CmifiU7aDHWKUSPkXpOyuIZoo3hoA7UwJjghFWc12f1H89jqIxVL0zFiIG13Ol&pcevaname=pc4.1&newfrom=zhuzhan_webmap")
+                        "&auth=")
                 .method("GET", null)
                 .addHeader("Accept", "*/*")
                 .addHeader("Accept-Language", "zh-CN,zh;q=0.9")
@@ -86,14 +86,14 @@ public class AreaTest {
                 .addHeader("Sec-Fetch-Mode", "cors")
                 .addHeader("Sec-Fetch-Site", "same-origin")
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
-                .addHeader("auth", "R0aDU2J5wYaI7SQef0wLP5AUZ2Z7bW8NuxLRLxRNNxNtHK%40ZKXTXRKCEBwyS8v7uvkGcuVtvvhguVtvyheuVtvCMGuVtvCQMuVtvIPcuVtvYvjuVtvZgMuVtcvY1SGpuxxtFiFmEb1vc3CuVtvcPPuVtveGvuVtveh3uxtwiKDv7uvhgMuxVVtvrMhuVtGccZcuxtf0wd0vyMSMySOOyO")
+                .addHeader("auth", "")
                 .addHeader("newfrom", "zhuzhan_webmap")
                 .addHeader("pcevaname", "pc4.1")
                 .addHeader("sec-ch-ua", "\"Google Chrome\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"")
                 .addHeader("sec-ch-ua-mobile", "?0")
                 .addHeader("sec-ch-ua-platform", "\"Windows\"")
-                .addHeader("seckey", "ESmxq2EbEXwArGejZFp9pPZA9e3kOf7ZO94NyzVFET0%3D%2CA3ToHVLZUBBmLO1ceqFMZ2Lqqf8UU1DboSGnujAGnh_bgEvsIvA4ZTMNXlInikGdYK4UTSt8UBxx4qBRC8RnQhOM8g_PVNBL2jN-szJQ7U3AHwl9L7DgK0DNexQBIN6K1_CmifiU7aDHWKUSPkXpOyuIZoo3hoA7UwJjghFWc12f1H89jqIxVL0zFiIG13Ol")
-                .addHeader("Cookie", "BIDUPSID=C911457D001DD8242E9340BF2B5E5687; PSTM=1649209765; BAIDUID=C911457D001DD824920CA13709615A47:SL; BDSFRCVID=Mc8OJeCmHRhWneoj7rJgM73fEeKK0gOTHllnoMiRAPOFYGCVJeC6EG0Ptf8g0KubuTkzogKK0gOTH6KF_2uxOjjg8UtVJeC6EG0Ptf8g0M5; H_BDCLCKID_SF=tbCeoK0-tDt3qn7I5KIhDjo-qxbXqMr2fgOZ0lOEWUosSnrNhPCbKxIsXHteKfQ-W20j0h7mWnRSDR7EMq5N0M4zWtJmLfT-0bc4KKJxbnLWeIJo5t5h3-PhhUJiB5OMBan7_qvIXKohJh7FM4tW3J0ZyxomtfQxtNRJ0DnjtpChbRO4-TF5j5ObDU5; newlogin=1; BDUSS=VNObzd1eVNsaDYtZnlMQVBQSGpXMnpkcDJLendtYWlTUnozZDdJR1cyd2FDbnRrRVFBQUFBJCQAAAAAAAAAAAEAAADspojrTWFzazE5OTgxMjEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp9U2QafVNkd; BDUSS_BFESS=VNObzd1eVNsaDYtZnlMQVBQSGpXMnpkcDJLendtYWlTUnozZDdJR1cyd2FDbnRrRVFBQUFBJCQAAAAAAAAAAAEAAADspojrTWFzazE5OTgxMjEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABp9U2QafVNkd; delPer=0; BAIDUID_BFESS=C911457D001DD824920CA13709615A47:SL; BDSFRCVID_BFESS=Mc8OJeCmHRhWneoj7rJgM73fEeKK0gOTHllnoMiRAPOFYGCVJeC6EG0Ptf8g0KubuTkzogKK0gOTH6KF_2uxOjjg8UtVJeC6EG0Ptf8g0M5; H_BDCLCKID_SF_BFESS=tbCeoK0-tDt3qn7I5KIhDjo-qxbXqMr2fgOZ0lOEWUosSnrNhPCbKxIsXHteKfQ-W20j0h7mWnRSDR7EMq5N0M4zWtJmLfT-0bc4KKJxbnLWeIJo5t5h3-PhhUJiB5OMBan7_qvIXKohJh7FM4tW3J0ZyxomtfQxtNRJ0DnjtpChbRO4-TF5j5ObDU5; BDRCVFR[dG2JNJb_ajR]=mk3SLVN4HKm; BDRCVFR[-pGxjrCMryR]=mk3SLVN4HKm; BDRCVFR[qm96YCg0y3b]=mk3SLVN4HKm; ZFY=KNkvxoudbszHEvTtVqy1k0ZZLIAmAkVPTN2mH9uCxkc:C; PSINO=2; H_PS_PSSID=38515_36548_38686_38540_38610_38767_38719_38841_38792_38808_38840_38638_26350_38569; BA_HECTOR=0h8485ah01242h0kala10gci1i82bli1n; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; M_LG_UID=3951601388; M_LG_SALT=ceb6264a9b132cd1437a1237881752f6; MCITY=-%3A; validate=43979; ab_sr=1.0.1_OWI5OWM5Mzk0OTkwZDVhYjQ5MTI4MzgyYjYzM2FmZjA5MDJlNWZhZGUxODZmNThhMzhmM2Y4NDhlYjg0OGE0NjBmZjMzMzQ4NmE5ZTdiNWEzOTFjMWJhMGE2MGUzMjNmYjM5ODk5ZjgxNDQ4YzY5OGEyMjJhYWRjZjQ2ZmNkOTE3NjI1ZTFjMzQ1ZmFmMDk3OTkzYTFiZDAzNjk2MTE1OWEyYzAwOTg5YTQ0YTkwOWFlMzQ3OTAwZDZjM2FhMTJm")
+                .addHeader("seckey", "")
+                .addHeader("Cookie", "")
                 .build();
         Response response = client.newCall(request).execute();
 
