@@ -3,6 +3,8 @@ package com.zhy.competition;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
@@ -92,12 +94,12 @@ public class DownLoadWork {
                 String downJson = post("/obs/web/download", JSON.toJSONString(body));
                 String signedUrl = JSON.parseObject(downJson).getJSONObject("data").getString("signedUrl");
 
-                String filePath = String.join(File.separator, userDir, questionPath, deliveryPath, delivery.getDeliverableName());
-                if (new File(filePath).exists()) {
-                    System.out.println(filePath + " 以下载！");
+                String filePath = String.join(File.separator, userDir, questionPath, deliveryPath);
+                if (new File(filePath + File.separator + delivery.getDeliverableName()).exists()) {
+                    System.out.println(delivery.getDeliverableName() + " 以下载！");
                     continue;
                 }
-                download(signedUrl, filePath);
+                download(signedUrl, filePath, delivery.getDeliverableName());
             }
         }
 
@@ -105,29 +107,50 @@ public class DownLoadWork {
 
     }
 
-    public static void download(String fileUrl, String fileName) {
+    public static void download(String fileUrl, String filePath, String fileName) {
+        String tempFileName = filePath + File.separator + "未确认 " + MD5.create().digestHex(fileName) + ".tempdownload";
+        String finalFileName = filePath + File.separator + fileName;
+
         //将文件下载后保存在E盘，返回结果为下载文件大小
-        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(fileName), new StreamProgress() {
+        long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(tempFileName), new StreamProgress() {
 
             @Override
             public void start() {
-                Console.log(fileName + " 开始下载。。。。");
+                Console.log(finalFileName + " 开始下载。。。。");
             }
 
             @Override
             public void progress(long total, long progressSize) {
-                Console.log("[ " + fileName + " ]" + " 已下载: {}, {}", FileUtil.readableFileSize(progressSize), ((progressSize * 100) / total) + "%");
+                Console.log("[ " + finalFileName + " ]" + " 已下载: {}, {}", FileUtil.readableFileSize(progressSize), ((progressSize * 100) / total) + "%");
             }
 
             @Override
             public void finish() {
-                Console.log(fileName + " 下载完成！");
+                Console.log(finalFileName + " 下载完成！");
+
+                rename(tempFileName, finalFileName);
+
                 System.out.println();
             }
         });
     }
 
     private static String baseDir() {
+        //使用系统的文件管理器
+        if (UIManager.getLookAndFeel().isSupportedLookAndFeel()) {
+            final String platform = UIManager.getSystemLookAndFeelClassName();
+            // If the current Look & Feel does not match the platform Look & Feel,
+            // change it so it does.
+            if (!UIManager.getLookAndFeel().getName().equals(platform)) {
+                try {
+                    UIManager.setLookAndFeel(platform);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
+
+
         FileSystemView fsv = FileSystemView.getFileSystemView();
 
         JFileChooser fileChooser = new JFileChooser();
@@ -146,6 +169,14 @@ public class DownLoadWork {
         return System.getProperty("user.dir");
 
     }
+
+    public static void rename(String oldName, String newName) {
+        File oldFile = new File(oldName);
+        File newFile = new File(newName);
+
+        oldFile.renameTo(newFile);
+    }
+
 
     private static String get(String url) {
         String result = HttpRequest.get(host + url)
