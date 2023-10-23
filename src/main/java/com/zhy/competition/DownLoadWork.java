@@ -93,6 +93,10 @@ public class DownLoadWork {
                 String signedUrl = JSON.parseObject(downJson).getJSONObject("data").getString("signedUrl");
 
                 String filePath = String.join(File.separator, userDir, questionPath, deliveryPath, delivery.getDeliverableName());
+                if (new File(filePath).exists()) {
+                    System.out.println(filePath + " 以下载！");
+                    continue;
+                }
                 download(signedUrl, filePath);
             }
         }
