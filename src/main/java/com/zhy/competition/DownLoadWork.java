@@ -11,6 +11,8 @@ import com.zhy.model.Delivery;
 import com.zhy.model.Question;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -59,7 +61,15 @@ public class DownLoadWork {
             return;
         }
         competitionId = competitionList.get(competitionIndex - 1).getId();
-        userDir = System.getProperty("user.dir") + "/" + competitionList.get(competitionIndex - 1).getName();
+        String dir = baseDir();
+        userDir = dir + "/" + competitionList.get(competitionIndex - 1).getName();
+        System.out.println("文件将下载在 [" + userDir + "] 路径下，输入 y 开始下载");
+
+        scanner.nextLine();
+        String y = scanner.nextLine();
+        if (!"y".equalsIgnoreCase(y)) {
+            return;
+        }
 
         String questionJson = get("/questions_area/competition/list?competitionId=" + competitionId);
         List<Question> questionsList = JSON.parseObject(questionJson).getJSONObject("data").getJSONArray("rows").stream().map(o -> JSON.parseObject(o.toString(), Question.class)).collect(Collectors.toList());
@@ -113,6 +123,25 @@ public class DownLoadWork {
         });
     }
 
+    private static String baseDir() {
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(fsv.getHomeDirectory());
+        fileChooser.setDialogTitle("请选择要下载的目录");
+        fileChooser.setApproveButtonText("确定");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (JFileChooser.APPROVE_OPTION == result) {
+            String path = fileChooser.getSelectedFile().getPath();
+            return path;
+        }
+
+        return System.getProperty("user.dir");
+
+    }
 
     private static String get(String url) {
         String result = HttpRequest.get(host + url)
