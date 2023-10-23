@@ -31,8 +31,22 @@ class IdTest {
 
         //List<InternshipExcel> internshipExcels = dbCompany();
 
-        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\错误文件.xlsx", 0);
+        ExcelReader reader = ExcelUtil.getReader("D:\\UserFiles\\桌面\\提供给优加就业平台的学生信息 - 副本.xlsx", 0);
         List<String> readAll = reader.read().stream().map(s -> String.valueOf(s.get(0))).collect(Collectors.toList());
+
+        ExcelReader reader1 = ExcelUtil.getReader("D:\\UserFiles\\桌面\\新建 Microsoft Excel 工作表.xlsx", 0);
+        List<String> readAll1 = reader1.read().stream().map(s -> String.valueOf(s.get(0))).collect(Collectors.toList());
+
+        ExcelReader reader2 = ExcelUtil.getReader("D:\\UserFiles\\桌面\\新建 Microsoft Excel 工作表 (3).xlsx", 0);
+        List<String> readAll2 = reader2.read().stream().map(s -> String.valueOf(s.get(0))).collect(Collectors.toList());
+
+        readAll.removeAll(readAll2);
+
+
+        for (String s : readAll) {
+
+            System.out.println(s);
+        }
 
         System.out.println(readAll.size());
         String phones = String.join(",", readAll);
