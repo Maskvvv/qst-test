@@ -37,9 +37,9 @@ public class DownLoadWork {
     public static String competitionId = "e7a081f48cec4edc928bb71f16501710";
     public static String userDir;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
-        System.out.print("请输入token：");
+        System.out.print("1. 请输入token：");
         Scanner scanner = new Scanner(System.in);
         token = scanner.nextLine();
 
@@ -56,15 +56,16 @@ public class DownLoadWork {
         System.out.println("----------------------------------------------------------------");
 
 
-        System.out.print("请输入需要下载的竞赛序号：");
+        System.out.print("2. 请输入需要下载的竞赛序号：");
         int competitionIndex = scanner.nextInt();
         if (competitionIndex <= 0 || competitionIndex > competitionList.size()) {
             System.out.println("竞赛不存在");
             return;
         }
         competitionId = competitionList.get(competitionIndex - 1).getId();
+        System.out.println("3. 请在弹窗中选择下载目录");
         String dir = baseDir();
-        userDir = dir + "/" + competitionList.get(competitionIndex - 1).getName();
+        userDir = dir + File.separator + competitionList.get(competitionIndex - 1).getName();
         System.out.println("文件将下载在 [" + userDir + "] 路径下，输入 y 开始下载");
 
         scanner.nextLine();
@@ -108,8 +109,8 @@ public class DownLoadWork {
     }
 
     public static void download(String fileUrl, String filePath, String fileName) {
-        String tempFileName = filePath + File.separator + "未确认 " + MD5.create().digestHex(fileName) + ".tempdownload";
         String finalFileName = filePath + File.separator + fileName;
+        String tempFileName = filePath + File.separator + "未确认 " + MD5.create().digestHex(finalFileName.substring(userDir.length())) + ".tempdownload";
 
         //将文件下载后保存在E盘，返回结果为下载文件大小
         long size = HttpUtil.downloadFile(fileUrl, FileUtil.file(tempFileName), new StreamProgress() {
@@ -135,7 +136,7 @@ public class DownLoadWork {
         });
     }
 
-    private static String baseDir() {
+    private static String baseDir() throws InterruptedException {
         //使用系统的文件管理器
         if (UIManager.getLookAndFeel().isSupportedLookAndFeel()) {
             final String platform = UIManager.getSystemLookAndFeelClassName();
@@ -160,6 +161,7 @@ public class DownLoadWork {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         int result = fileChooser.showOpenDialog(null);
+        Thread.sleep(10);
 
         if (JFileChooser.APPROVE_OPTION == result) {
             String path = fileChooser.getSelectedFile().getPath();
