@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.zhy.model.Competition;
 import com.zhy.model.Delivery;
 import com.zhy.model.Question;
+import com.zhy.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -45,7 +46,7 @@ public class DownLoadWork {
 
 
         String competitionJson = get("/competition_list/uplus");
-        List<Competition> competitionList = JSON.parseObject(competitionJson).getJSONObject("data").getJSONArray("rows").stream().map(o -> JSON.parseObject(o.toString(), Competition.class)).collect(Collectors.toList());
+        List<Competition> competitionList = JsonUtils.getPagingData(competitionJson, Competition.class);
 
         System.out.println("----------------------------------------------------------------");
         System.out.println(String.format("%-5s%-30s", "序号", "竞赛名称"));
@@ -75,14 +76,14 @@ public class DownLoadWork {
         }
 
         String questionJson = get("/questions_area/competition/list?competitionId=" + competitionId);
-        List<Question> questionsList = JSON.parseObject(questionJson).getJSONObject("data").getJSONArray("rows").stream().map(o -> JSON.parseObject(o.toString(), Question.class)).collect(Collectors.toList());
+        List<Question> questionsList = JsonUtils.getPagingData(questionJson, Question.class);
 
         for (Question question : questionsList) {
             String questionPath = String.join("-", question.getQuestionName(), question.getTrackName(), question.getStageName());
 
             String deliveryUri = "/competition_question_deliverables/personal/committed?stageId=" + question.getStageId() + "&questionId=" + question.getQuestionId();
             String deliveryJson = get(deliveryUri);
-            List<Delivery> deliveryList = JSON.parseObject(deliveryJson).getJSONObject("data").getJSONArray("rows").stream().map(o -> JSON.parseObject(o.toString(), Delivery.class)).collect(Collectors.toList());
+            List<Delivery> deliveryList = JsonUtils.getPagingData(deliveryJson, Delivery.class);
 
             for (Delivery delivery : deliveryList) {
                 if (StringUtils.isBlank(delivery.getDeliverablePath())) continue;
