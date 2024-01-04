@@ -83,7 +83,7 @@ public class UseridUtils {
                         "INNER JOIN `quc`.`user` t2 ON t1.`{}` = t2.`customer_id` \n" +
                         "SET t1.`{}` = t2.`userid`;";
 
-        File file = new File("D:\\UserFiles\\桌面\\userid变更sql\\" + dbName + ".sql");
+        File file = new File("E:\\需求文档\\统一用户id\\userid变更sql\\" + dbName + ".sql");
         FileAppender appender = new FileAppender(file, 16, true);
 
         List<Table> tableList = DbUtils.query(Table.class, getTableNameSql, dbName);
