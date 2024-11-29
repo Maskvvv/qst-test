@@ -27,7 +27,7 @@ public class DbTest {
                 "FROM t_country tc\n" +
                 "LEFT JOIN t_region tr on tr.c_id = tc.id\n" +
                 "LEFT JOIN t_city tct on tct.r_id = tr.id\n" +
-                "WHERE tc.name_cn = '阿联酋'");
+                "WHERE tc.name_cn = '印度尼西亚'");
 
 
         Map<String, Entity> country = new LinkedHashMap<>();
