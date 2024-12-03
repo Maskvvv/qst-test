@@ -21,7 +21,7 @@ import java.util.Objects;
 @Slf4j
 public class AliPayHkSignatureUtils {
 
-    private static final String sign_template = "%s %s\n" +
+    public static final String sign_template = "%s %s\n" +
         "%s.%s.%s";
 
     public static final String SIGN_TEMPLATE_HEADER = "algorithm=RSA256, keyVersion=0, signature=%s";

@@ -28,4 +28,5 @@ public class AliPayHKConst {
     public static final String UPDATE_TEMPLATE_URL = "/api/open/alipay/v1/ipass/template/manage/updateTemplate";
     public static final String QUERY_TEMPLATE_URL = "/api/open/alipay/v1/ipass/template/manage/detail";
     public static final String CREATE_TICKET_URL = "/api/open/alipay/v1/ipass/pass/manage/createPass";
+    public static final String UPDATE_TICKET_URL = "/api/open/alipay/v1/ipass/pass/manage/updatePass";
 }
