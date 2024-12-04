@@ -111,6 +111,7 @@ public class AlipayHKController {
 
      void validateResponse(ResponseEntity<String> response, String uri) {
         HttpHeaders responseHeaders = response.getHeaders();
+         log.info("headers: {}", JSON.toJSONString(responseHeaders));
         String signature = extractSignature(responseHeaders);
         String clientId = extractHeaderValue(responseHeaders, AliPayHKConst.CLIENT_ID_RESPONSE_SIDE);
         String requestTime = extractHeaderValue(responseHeaders, AliPayHKConst.RESPONSE_TIME_RESPONSE_SIDE);
