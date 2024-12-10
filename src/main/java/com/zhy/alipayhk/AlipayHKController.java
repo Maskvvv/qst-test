@@ -213,7 +213,7 @@ public class AlipayHKController {
     public void queryTemplate() {
         Resp<String> signatureAndVerifyResp = gotRemoteResp(AliPayHKConst.CLIENT_ID,
                 AliPayHKConst.QUERY_TEMPLATE_URL,
-                queryJson);
+                queryTemplateJson);
         System.out.println(signatureAndVerifyResp);
     }
 
@@ -303,7 +303,7 @@ public class AlipayHKController {
             "    \"publishScene\": null\n" +
             "}";
 
-    private String queryJson = "{\n" +
+    private String queryTemplateJson = "{\n" +
             "  \"merchantId\": \"2160120155192269\",\n" +
             "  \"templateCode\": \"22024121000135606000000012735931\"\n" +
             "}";
@@ -341,7 +341,7 @@ public class AlipayHKController {
 
 
     private String createTemplateJson = "{\n" +
-            "    \"requestId\": \"12300001\",\n" +
+            "    \"requestId\": \"12300003\",\n" +
             "    \"merchantId\": \"2160120155192269\",\n" +
             "    \"startDate\": 1733818207008,\n" +
             "    \"endDate\": 1765354207008,\n" +
@@ -349,7 +349,7 @@ public class AlipayHKController {
             "    \"product\": \"PASS\",\n" +
             "    \"codeType\": \"none\",\n" +
             "    \"codeStandard\": \"\",\n" +
-            "    \"imageUrl\": \"https://imgbeta.ticketebay.com/crossPoster/1d5fde6b68eeaefee27f44cdd5b7eade62704126.png\",\n" +
+            "    \"imageUrl\": \"https://imgbeta.ticketebay.com/poster/d9c574e21c1b22fd5207362641cd2f2a32be35f3.jpg\",\n" +
             "    \"button\": {\n" +
             "        \"browserOpen\": null,\n" +
             "        \"btnType\": \"none\",\n" +
