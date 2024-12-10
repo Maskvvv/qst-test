@@ -1,5 +1,6 @@
 package com.zhy.alipayhk;
 
+import cn.hutool.core.net.URLEncodeUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.global.api.tools.SignatureTool;
@@ -45,27 +46,29 @@ public class AlipayHKController {
     private RestTemplate restTemplate;
 
 
-     String signatureCipher(String httpMethod, String uri, String clientId, String requestTime, String httpBody){
+    String signatureCipher(String httpMethod, String uri, String clientId, String requestTime, String httpBody) {
 
-         try {
-             String sign = SignatureTool.sign(httpMethod, uri, clientId, requestTime, httpBody, AliPayHkSignatureUtils.PRIVATE_KEY);
-             return String.format(AliPayHkSignatureUtils.SIGN_TEMPLATE_HEADER, sign);
+        try {
+            String sign = SignatureTool.sign(httpMethod, uri, clientId, requestTime, httpBody, AliPayHkSignatureUtils.PRIVATE_KEY);
+            return String.format(AliPayHkSignatureUtils.SIGN_TEMPLATE_HEADER, sign);
 
-         } catch (Exception e) {
-             throw new RuntimeException(e);
-         }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-         //String encrypting = AliPayHkSignatureUtils.encrypting(httpMethod,
-         //        uri,
-         //        clientId,
-         //        requestTime,
-         //        httpBody);
-         //
-         //System.out.println(encrypting);
-         //return encrypting;
-    };
+        //String encrypting = AliPayHkSignatureUtils.encrypting(httpMethod,
+        //        uri,
+        //        clientId,
+        //        requestTime,
+        //        httpBody);
+        //
+        //System.out.println(encrypting);
+        //return encrypting;
+    }
 
-     HttpHeaders httpHeaders(String clientId, String requestTime, String signatureText){
+    ;
+
+    HttpHeaders httpHeaders(String clientId, String requestTime, String signatureText) {
         HttpHeaders requestHeaders = new HttpHeaders();
 
         requestHeaders.add(AliPayHKConst.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -75,8 +78,8 @@ public class AlipayHKController {
         return requestHeaders;
     }
 
-     Map<String, String> httpHeaderMap(String clientId, String requestTime, String signatureText){
-         Map<String, String> requestHeaders = new HashMap<>();
+    Map<String, String> httpHeaderMap(String clientId, String requestTime, String signatureText) {
+        Map<String, String> requestHeaders = new HashMap<>();
 
         requestHeaders.put(AliPayHKConst.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         requestHeaders.put(AliPayHKConst.CLIENT_ID_REQUEST_SIDE, clientId);
@@ -86,7 +89,7 @@ public class AlipayHKController {
     }
 
 
-     String generateSignature(String clientId, String uri, String requestBody, String requestTime) {
+    String generateSignature(String clientId, String uri, String requestBody, String requestTime) {
         String signatureCipher = signatureCipher(HttpMethod.POST.name(), uri, clientId, requestTime, requestBody);
         if (StringUtils.isBlank(signatureCipher)) {
             log.error("Signature generation failed for requestBody: {}", requestBody); // 补充日志
@@ -109,9 +112,9 @@ public class AlipayHKController {
         }
     }
 
-     void validateResponse(ResponseEntity<String> response, String uri) {
+    void validateResponse(ResponseEntity<String> response, String uri) {
         HttpHeaders responseHeaders = response.getHeaders();
-         log.info("headers: {}", JSON.toJSONString(responseHeaders));
+        log.info("headers: {}", JSON.toJSONString(responseHeaders));
         String signature = extractSignature(responseHeaders);
         String clientId = extractHeaderValue(responseHeaders, AliPayHKConst.CLIENT_ID_RESPONSE_SIDE);
         String requestTime = extractHeaderValue(responseHeaders, AliPayHKConst.RESPONSE_TIME_RESPONSE_SIDE);
@@ -124,7 +127,7 @@ public class AlipayHKController {
         }
     }
 
-     Resp<String> remoteRespBody(String responseBody) {
+    Resp<String> remoteRespBody(String responseBody) {
         if (StringUtils.isBlank(responseBody)) { // 补充对 responseBody 为空的检查
             log.error("Response body is empty");
             return Resp.fail("exception()");
@@ -139,7 +142,7 @@ public class AlipayHKController {
         return Resp.success(responseBody);
     }
 
-     String extractSignature(HttpHeaders headers) {
+    String extractSignature(HttpHeaders headers) {
         List<String> signatureOriginList = headers.get("Signature");
         if (CollectionUtils.isEmpty(signatureOriginList)) {
             log.error("Signature header is missing or empty"); // 补充日志
@@ -157,7 +160,7 @@ public class AlipayHKController {
         return signature;
     }
 
-     String extractHeaderValue(HttpHeaders headers, String headerName) {
+    String extractHeaderValue(HttpHeaders headers, String headerName) {
         List<String> headerValues = headers.get(headerName);
         if (CollectionUtils.isEmpty(headerValues)) {
             log.error("{} header is missing or empty", headerName); // 补充日志
@@ -166,37 +169,24 @@ public class AlipayHKController {
         return headerValues.get(0);
     }
 
-     String getHost(String uri) {
+    String getHost(String uri) {
         //String host = ConfigManager.isDevelop() ? AliPayHKConst.DOMAIN_PRE + uri : AliPayHKConst.DOMAIN_PROD + uri;
-        String host = AliPayHKConst.DOMAIN_PRE + uri ;
+        String host = AliPayHKConst.DOMAIN_PRE + uri;
         log.info("Host generated: {}", host); // 补充日志
         return host;
     }
 
 
-
-
-
-     ResponseEntity<String> sendHttpRequest(String clientId, String uri, String requestBody, String signatureCipher, String requestTime) {
+    ResponseEntity<String> sendHttpRequest(String clientId, String uri, String requestBody, String signatureCipher, String requestTime) {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, httpHeaders(clientId, requestTime, signatureCipher));
         String host = getHost(uri);
-         RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(host, entity, String.class);
         if (!HttpStatus.OK.equals(response.getStatusCode())) {
             log.error("Failed to invoke Alipay HK server. Status: {}, Response: {}", response.getStatusCode(), response.getBody()); // 补充日志
             throw new RuntimeException("translateFunction().apply(I18nKey.EXCEPTION_REMOTE_REQUEST_ERROR)");
         }
         return response;
-    }
-
-
-
-
-
-
-    @Test
-    public void test() {
-        System.out.println(JSON.parseObject(createTemplateJson, AliPayHKCreateTemplateRequest.class));
     }
 
 
@@ -208,7 +198,6 @@ public class AlipayHKController {
 
         System.out.println(signatureAndVerifyResp);
     }
-
 
 
     @Test
@@ -245,10 +234,6 @@ public class AlipayHKController {
     }
 
 
-
-
-
-
     private String updateTicketJson = "{\n" +
             "    \"merchantId\": \"2160400000000022\",\n" +
             "    \"userId\": \"2160220043214225\",\n" +
@@ -282,43 +267,45 @@ public class AlipayHKController {
             "}";
 
     private String createTicketJson = "{\n" +
-            "    \"merchantId\": \"2160400000000022\",\n" +
-            "    \"userId\": \"2160220043214225\",\n" +
-            "    \"templateCode\": \"22024120100135606000000001443495\",\n" +
-            "    \"bizSerialId\": \"000000006\",\n" +
+            "    \"merchantId\": \"2160120155192269\",\n" +
+            "    \"userId\": \"2160220148759854\",\n" +
+            "    \"templateCode\": \"22024120500135606000000012608735\",\n" +
+            "    \"bizSerialId\": \"11063608\",\n" +
             "    \"bizSerialType\": \"OUT_PLAT_FORM\",\n" +
-            "    \"startDate\": 1735279592000,\n" +
-            "    \"endDate\": 1735538792000,\n" +
+            "    \"startDate\": 1734019200000,\n" +
+            "    \"endDate\": 1734624000000,\n" +
+            "    \"bizCreate\": 1733399042049,\n" +
             "    \"type\": \"TICKET\",\n" +
             "    \"product\": \"PASS\",\n" +
             "    \"codeInfo\": {\n" +
             "        \"$codemsg$\": \"1\",\n" +
             "        \"$codevalue$\": \"1\"\n" +
             "    },\n" +
-            "    \"bizCreate\": 1732787128015,\n" +
             "    \"dataInfo\": {\n" +
-            "        \"$address_zh_HK$\": \"香港九龍彌敦道792-804號協成行太子中心703室\",\n" +
-            "        \"$address_en_US$\": \"香港九龍彌敦道792-804號協成行太子中心703室\",\n" +
-            "        \"$availableTimes_en_US$\": 2,\n" +
-            "        \"$availableTimes_zh_HK$\": 2,\n" +
-            "        \"$price_zh_HK$\": {\n" +
-            "            \"cent\": 800,\n" +
-            "            \"currency\": \"HKD\"\n" +
-            "        },\n" +
-            "        \"$price_en_US$\": {\n" +
-            "            \"cent\": 800,\n" +
-            "            \"currency\": \"HKD\"\n" +
-            "        },\n" +
-            "        \"$startTime_zh_HK$\": \"1735279592000\",\n" +
-            "        \"$startTime_en_US$\": \"1735279592000\",\n" +
-            "        \"$endTime_zh_HK$\": \"1737957992000\",\n" +
-            "        \"$endTime_en_US$\": \"1737957992000\"\n" +
-            "    }\n" +
+            "        \"$ticketName_zh_HK$\": \"100实体票\",\n" +
+            "        \"$ticketName_en_US$\": \"100实体票\",\n" +
+            "        \"$address_zh_HK$\": \"香港特別行政區油尖旺區尖沙咀梳士巴利道10號\",\n" +
+            "        \"$address_en_US$\": \"香港特別行政區油尖旺區尖沙咀梳士巴利道10號\",\n" +
+            "        \"$availableTimes_zh_HK$\": 1,\n" +
+            "        \"$availableTimes_en_US$\": 1,\n" +
+            "        \"$price_zh_HK$\": null,\n" +
+            "        \"$price_en_US$\": null,\n" +
+            "        \"$startTime_zh_HK$\": 1734019200000,\n" +
+            "        \"$startTime_en_US$\": 1734019200000,\n" +
+            "        \"$endTime_zh_HK$\": 1734624000000,\n" +
+            "        \"$endTime_en_US$\": 1734624000000,\n" +
+            "        \"$platformName_zh_HK$\": \"Ticketebay\",\n" +
+            "        \"$platformName_en_US$\": \"Ticketebay\",\n" +
+            "        \"$platformLogo_zh_HK$\": null,\n" +
+            "        \"$platformLogo_en_US$\": null\n" +
+            "    },\n" +
+            "    \"extInfo\": null,\n" +
+            "    \"publishScene\": null\n" +
             "}";
 
     private String queryJson = "{\n" +
-            "  \"merchantId\": \"2160400000000022\",\n" +
-            "  \"templateCode\": \"22024112800135606000000001424755\"\n" +
+            "  \"merchantId\": \"2160120155192269\",\n" +
+            "  \"templateCode\": \"22024121000135606000000012735931\"\n" +
             "}";
 
     private String updateTemplateJson = "{\n" +
@@ -354,38 +341,59 @@ public class AlipayHKController {
 
 
     private String createTemplateJson = "{\n" +
-            "    \"requestId\": \"1212121112010011\",\n" +
-            "    \"merchantId\": \"2160400000000022\",\n" +
-            "    \"startDate\": 1733107363121,\n" +
-            "    \"endDate\": 1735710355000,\n" +
+            "    \"requestId\": \"12300001\",\n" +
+            "    \"merchantId\": \"2160120155192269\",\n" +
+            "    \"startDate\": 1733818207008,\n" +
+            "    \"endDate\": 1765354207008,\n" +
             "    \"type\": \"TICKET\",\n" +
             "    \"product\": \"PASS\",\n" +
             "    \"codeType\": \"none\",\n" +
             "    \"codeStandard\": \"\",\n" +
             "    \"imageUrl\": \"https://imgbeta.ticketebay.com/crossPoster/1d5fde6b68eeaefee27f44cdd5b7eade62704126.png\",\n" +
             "    \"button\": {\n" +
+            "        \"browserOpen\": null,\n" +
             "        \"btnType\": \"none\",\n" +
+            "        \"btnUrl\": null,\n" +
             "        \"urlType\": \"CODE_PAY_BTN\"\n" +
             "    },\n" +
             "    \"localeInfo\": {\n" +
             "        \"zh_HK\": {\n" +
-            "            \"name\": \"【新加坡】zhy test\",\n" +
-            "            \"subName\": \"【新加坡】zhy test\",\n" +
-            "            \"description\": \"1.請向入口職員展示以上電子票2.每張電子票只限一人使用及使用一次2.持電子票人士可於指定特別通道換領幸運卡乙張\",\n" +
+            "            \"name\": \"AlpayHK 小程序驗收 1210\",\n" +
+            "            \"subName\": \"AlpayHK 小程序驗收 1210\",\n" +
+            "            \"description\": \"演出時長：120<br>限購說明：每單限購6張<br>座位類型：請按門票對應座位，有序對號入座<br>兒童入場提示：1.2公尺以上憑票入場，1.2公尺以下謝絕入場<br>禁止攜帶物品：食品、飲料、相機、行動電源、打火機等<br>實體票：本項目支持憑實體票入場，支持以下取票方式：<br>- 快遞配送：需支付郵費，具體金額以訂單頁展示爲準，順豐發貨。<br>- 現場取票：工作人員將在演出開場前1小時至現場派票。工作人員聯繫方式、具體取票地址將在演出當天以短信或郵箱通知爲準。<br><br>電子票：實名電子票：觀演人現場觀演，須攜帶本人證件（需與購票時提供的證件一致）通過安檢時，閘機驗證人臉、證件及購票信息一致方可入場。<br>普通電子票：普通電子票指無須使用身份證等證件登記的電子票，將以二維碼作為入場憑證。<br>電子票兌換紙票：對於需兌換成紙質票的電子票，則需要您在限定時間內將電子票兌換成紙質票。\",\n" +
+            "            \"brandName\": \"Ticketebay\"\n" +
+            "        },\n" +
+            "        \"en_US\": {\n" +
+            "            \"name\": \"AlpayHK Mini Program Acceptance 1210\",\n" +
+            "            \"subName\": \"AlpayHK Mini Program Acceptance 1210\",\n" +
+            "            \"description\": \"Purchase Restriction：Each order is limited to 6 pieces<br>Seat Type：Please take your seats according to the corresponding tickets in an orderly manner<br>Children Admission Notice：11111<br>Paper Ticket：This project supports entry with physical tickets and supports the following ticket collection methods:<br>- Express delivery: postage is required, the specific amount is subject to the display on the order page, and SF Express will ship the goods.<br>- On site ticket collection: The staff will arrive at the venue one hour before the start of the performance to distribute tickets. The contact information and specific ticketing address of the staff will be notified via SMS or email on the day of the performance.<br><br>E-Ticket：Real-Name E-Tickets: Attendees must bring their personal identification (which must match the ID provided during ticket purchase) for entry. At the venue, identity verification will be conducted at security checkpoints through facial recognition, ID, and ticket information. Only when all these match can entry be granted.<br>Standard E-Tickets: These tickets do not require identity registration, such as with an ID card. Entry will be granted upon presenting a QR code as the proof of purchase.<br>E-Ticket to Paper Ticket Exchange: For electronic tickets requiring conversion into physical tickets, attendees must exchange them for paper tickets within the designated time frame.\",\n" +
             "            \"brandName\": \"Ticketebay\"\n" +
             "        }\n" +
             "    },\n" +
-            "    \"merchantLogo\": \"https://opbeta.ticketebay.com/img/logo.f20dabd.png\",\n" +
-            "    \"orderPageLink\": \"alipayhk://platformapi/startapp?appId=2102020211542667&page=pages/activity/detail/index&query=id%3D211802\",\n" +
-            "    \"detailLink\": \"alipayhk://platformapi/startapp?appId=2102020211542667&page=pages/activity/detail/index&query=id%3D211802\",\n" +
+            "    \"merchantLogo\": \"https://assets.ticketebay.com/public/icons/ticketebay-logo-all.jpg\",\n" +
+            "    \"currentAmountCent\": 100,\n" +
+            "    \"originalAmountCent\": 100,\n" +
+            "    \"currencyCode\": \"HKD\",\n" +
+            "    \"stock\": null,\n" +
+            "    \"orderPageLink\": \"alipayhk://platformapi/startapp?appId=2102020211542667&page=pages/activity/detail/index&query=id%3D211287\",\n" +
+            "    \"detailLink\": \"alipayhk://platformapi/startapp?appId=2102020211542667&page=pages/activity/detail/index&query=id%3D211287\",\n" +
             "    \"categories\": [\n" +
-            "        \"0002000100020009\"\n" +
+            "        \"0002000100020002\"\n" +
             "    ],\n" +
-            "\n" +
-            "    \"exposure\": \"exposed\"  \n" +
+            "    \"bizMids\": null,\n" +
+            "    \"exposure\": \"exposed\",\n" +
+            "    \"passExtInfo\": {\n" +
+            "        \"tags\": [\n" +
+            "            \"HOT\"\n" +
+            "        ],\n" +
+            "        \"country\": \"156\",\n" +
+            "        \"province\": \"810000\",\n" +
+            "        \"soldNum\": 10,\n" +
+            "        \"userNum\": 2,\n" +
+            "        \"rating\": 4.5,\n" +
+            "        \"rateNum\": \"1\"\n" +
+            "    }\n" +
             "}";
-
-
 
 
     @Test

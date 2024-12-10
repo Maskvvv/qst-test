@@ -8,7 +8,8 @@ public class AliPayHKConst {
 
     public static String CLIENT_ID = "";
 
-    public static String DOMAIN_PRE = "https://business.dl.alipaydev.com";
+    //public static String DOMAIN_PRE = "https://open-id-pre.alipay.com";
+    public static String DOMAIN_PRE = "https://open-id-pre.alipay.com";
     public static String DOMAIN_PROD = "https://open-id-pre.alipay.com";
 
     /*********************** 签名参数 ****************************/
