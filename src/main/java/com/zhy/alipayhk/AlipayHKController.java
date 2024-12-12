@@ -277,9 +277,9 @@ public class AlipayHKController {
 
 
     private String updateTicketJson = "{\n" +
-            "    \"merchantId\": \"2160400000000022\",\n" +
-            "    \"userId\": \"2160220043214225\",\n" +
-            "    \"passId\": \"2024120219027102160229300021201\",\n" +
+            "    \"merchantId\": \"2160120155192269\",\n" +
+            "    \"userId\": \"2160220147636253\",\n" +
+            "    \"passId\": \"2024121119027102160254809674364\",\n" +
             "    \"status\": \"REFUND\"\n" +
             "}";
 
