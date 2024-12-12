@@ -117,6 +117,7 @@ public class AlipayHKController {
     void validateResponse(ResponseEntity<String> response, String uri) {
         HttpHeaders responseHeaders = response.getHeaders();
         log.info("headers: {}", JSON.toJSONString(responseHeaders));
+        log.info("tracerId: " + responseHeaders.get("tracerId"));
         String signature = extractSignature(responseHeaders);
         String clientId = extractHeaderValue(responseHeaders, AliPayHKConst.CLIENT_ID_RESPONSE_SIDE);
         String requestTime = extractHeaderValue(responseHeaders, AliPayHKConst.RESPONSE_TIME_RESPONSE_SIDE);
@@ -279,8 +280,8 @@ public class AlipayHKController {
     private String updateTicketJson = "{\n" +
             "    \"merchantId\": \"2160120155192269\",\n" +
             "    \"userId\": \"2160220147636253\",\n" +
-            "    \"passId\": \"2024121119027102160254809674364\",\n" +
-            "    \"status\": \"REFUND\"\n" +
+            "    \"passId\": \"2024121119027102160253009674363\",\n" +
+            "    \"status\": \"USED\"\n" +
             "}";
 
     private String updateTicketJson1 = "{\n" +

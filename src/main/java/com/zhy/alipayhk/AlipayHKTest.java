@@ -206,9 +206,11 @@ public class AlipayHKTest {
                 .timeout(20000)//超时，毫秒
                 .execute();
 
-        System.out.println(JSON.toJSONString(execute.headers()));
+        Map<String, List<String>> headers = execute.headers();
+        System.out.println(JSON.toJSONString(headers));
 
 
+        System.out.println("tracerId: " + headers.get("tracerId"));
         System.out.println(JSON.toJSONString(execute.body()));
 
 
